@@ -15,10 +15,29 @@ class FishController extends Controller
         ], 200);
     }
 
-    public function Add()
+    public function Add(Request $req)
     {
+        $req->validate([
+            'name' => 'required',
+            'weight_kg' => 'required|numeric'
+        ]);
+
+        $fish = Fish::where('name', $req->name)->first();
+
+        if ($fish) {
+            return response()->json([
+                'message' => 'Már létező hal'
+            ], 409);
+        }
+
+        $data = new Fish();
+        $data->name = $req->name;
+        $data->weight_kg = $req->weight_kg;
+        $data->save();
+        return response()->json(['message' => 'Új hal sikeresen hozzáadva', $data], 201);
 
     }
+
     public function Delete()
     {
 

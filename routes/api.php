@@ -15,7 +15,7 @@ Route::post('/registration', [UserController::class, 'Registration']);
 #FISH
 Route::get("/fish", [FishController::class, 'All']);
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/fish/{id}', [FishController::class, 'Add']);
+    Route::post('/fish', [FishController::class, 'Add']);
     Route::delete('fish/{id}', [FishController::class, 'Delete']);
 });
 

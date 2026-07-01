@@ -24,18 +24,17 @@ class UserController extends Controller
             ])
         ) {
             return response()->json([
-                'message' => 'Nem sikerült belépni'
-            ], 403);
+                'message' => 'Hibás felhasználónév vagy jelszó'
+            ], 401);
         }
+
         $user = Auth::user();
 
         $token = $user->createToken('api-token', ['*'], now()->addHour())->plainTextToken;
 
         return response()->json([
-            'message' => 'Sikeres belépés',
-            'token' => $token,
-            'user' => $user
-
+            'message' => 'Sikeres bejelentkezés',
+            'token' => $token
         ], 200);
     }
 

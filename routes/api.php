@@ -14,7 +14,11 @@ Route::post('/login', [UserController::class, 'Login']);
 Route::post('/registration', [UserController::class, 'Reg']);
 #FISH
 Route::get("/fish", [FishController::class, 'All']);
-Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/fish', [FishController::class, 'Add']);
+//     Route::delete('fish/{id}', [FishController::class, 'Delete']);
+// });
+Route::middleware('auth.token')->group(function () {
     Route::post('/fish', [FishController::class, 'Add']);
-    Route::delete('fish/{id}', [FishController::class, 'Delete']);
+    Route::delete('/fish/{id}', [FishController::class, 'Delete']);
 });

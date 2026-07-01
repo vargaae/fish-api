@@ -30,11 +30,18 @@ class UserController extends Controller
 
         $user = Auth::user();
 
-        $token = $user->createToken('api-token', ['*'], now()->addHour())->plainTextToken;
+        // $token = $user->createToken('api-token', ['*'], now()->addHour())->plainTextToken;
+
+        $token = $user->createToken(
+            'api-token',
+            ['*'],
+            now()->addHour()
+        );
 
         return response()->json([
             'message' => 'Sikeres bejelentkezés',
-            'token' => $token
+            'token' => $token->plainTextToken,
+            'expires_at' => $token->accessToken->expires_at->format('Y-m-d H:i:s'),
         ], 200);
     }
 
@@ -60,38 +67,6 @@ class UserController extends Controller
             'message' => 'Sikeres regisztráció'
         ], 201);
     }
-    // public function Registration(Request $req)
-    // {
-    //     $req->validate([
-    //         'username' => ['required', 'unique:user,username', 'between:5,255', 'string'],
-    //         'password' => [
-    //             'required',
-    //             Password::min(4)
-    //                 ->max(255)
-    //                 ->mixedCase()
-    //                 ->letters(),
-    //             // 'confirmed',
-    //         ],
-    //         // 'password_confirmation' => 'required',
-    //         // 'permission' => 'required|in:u,a'
-    //     ]);
-
-    //     // TODO: if('name')
-    //     //    -> 'A
-    //     // felhasználónév
-    //     // már
-    //     // foglalt'
-
-    //     $data = new User();
-    //     $data->username = $req->username;
-    //     $data->password = Hash::make($req->password);
-    //     // $data->permission = $req->permission;
-    //     $data->save();
-
-    //     return response()->json([
-    //         'message' => 'Sikeres regisztráció'
-    //     ], 201);
-    // }
 
     public function Logout(Request $req)
     {

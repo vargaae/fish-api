@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -15,7 +18,7 @@ class UserController extends Controller
         ]);
 
         if (
-            !Auth::attemp([
+            !Auth::attempt([
                 'username' => $req->username,
                 'password' => $req->password
             ])
@@ -31,10 +34,65 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Sikeres belépés',
             'token' => $token,
-            'user' => new UserResource($user)
+            'user' => $user
 
         ], 200);
     }
+
+    public function Reg(Request $req)
+    {
+        $req->validate([
+            'username' => ['required', 'between:5,255', 'string'],
+            'password' => ['required', 'string', 'min:4'],
+        ]);
+
+        if (User::where('username', $req->username)->exists()) {
+            return response()->json([
+                'message' => 'A felhasználónév már foglalt'
+            ], 409);
+        }
+
+        $data = new User();
+        $data->username = $req->username;
+        $data->password = Hash::make($req->password);
+        $data->save();
+
+        return response()->json([
+            'message' => 'Sikeres regisztráció'
+        ], 201);
+    }
+    // public function Registration(Request $req)
+    // {
+    //     $req->validate([
+    //         'username' => ['required', 'unique:user,username', 'between:5,255', 'string'],
+    //         'password' => [
+    //             'required',
+    //             Password::min(4)
+    //                 ->max(255)
+    //                 ->mixedCase()
+    //                 ->letters(),
+    //             // 'confirmed',
+    //         ],
+    //         // 'password_confirmation' => 'required',
+    //         // 'permission' => 'required|in:u,a'
+    //     ]);
+
+    //     // TODO: if('name')
+    //     //    -> 'A
+    //     // felhasználónév
+    //     // már
+    //     // foglalt'
+
+    //     $data = new User();
+    //     $data->username = $req->username;
+    //     $data->password = Hash::make($req->password);
+    //     // $data->permission = $req->permission;
+    //     $data->save();
+
+    //     return response()->json([
+    //         'message' => 'Sikeres regisztráció'
+    //     ], 201);
+    // }
 
     public function Logout(Request $req)
     {

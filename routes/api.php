@@ -11,23 +11,10 @@ use App\Http\Controllers\FishController;
 
 #Login-Registration
 Route::post('/login', [UserController::class, 'Login']);
-Route::post('/registration', [UserController::class, 'Registration']);
+Route::post('/registration', [UserController::class, 'Reg']);
 #FISH
 Route::get("/fish", [FishController::class, 'All']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/fish', [FishController::class, 'Add']);
     Route::delete('fish/{id}', [FishController::class, 'Delete']);
 });
-
-
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::post('/fish', [FishController::class, 'store']);
-//     Route::put('/fish/{id}', [FishController::class, 'update']);
-//     Route::delete('/fish/{id}', [FishController::class, 'destroy']);
-// });
-
-// Route::get('/fish', [FishController::class, 'index']);
-// Route::get('/fish/{id}', [FishController::class, 'show']);
-// Route::post('/fish', [FishController::class, 'store']);
-// Route::put('/fish/{id}', [FishController::class, 'update']);
-// Route::delete('/fish/{id}', [FishController::class, 'destroy']);

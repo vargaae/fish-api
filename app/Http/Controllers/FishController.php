@@ -34,12 +34,26 @@ class FishController extends Controller
         $data->name = $req->name;
         $data->weight_kg = $req->weight_kg;
         $data->save();
-        return response()->json(['message' => 'Új hal sikeresen hozzáadva', $data], 201);
 
+        return response()->json([
+            'message' => 'Új hal sikeresen hozzáadva'
+        ], 201);
     }
 
-    public function Delete()
+    public function Delete($id)
     {
+        $fish = Fish::find($id);
 
+        if (!$fish) {
+            return response()->json([
+                'message' => 'Hal nem található'
+            ], 404);
+        }
+
+        $fish->delete();
+
+        return response()->json([
+            'message' => 'Hal sikeresen törölve'
+        ], 200);
     }
 }
